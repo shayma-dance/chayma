@@ -1,4 +1,5 @@
 const User = require('../Models/database/User');
+
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -88,4 +89,8 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).send("Server error");
   }
 };
+
+
+
+
 

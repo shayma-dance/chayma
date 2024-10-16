@@ -1,4 +1,5 @@
 const express = require("express");
+
 const { createuser, login ,  getAllUsers } = require("../Controller/User.js");
 
 const router = express.Router();
@@ -11,5 +12,7 @@ router.post("/login", login);
 
 // Get all users
 router.get("/AllUsers", getAllUsers);
+
+
 
 module.exports = router;
