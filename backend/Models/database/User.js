@@ -13,7 +13,12 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true
   },
-  
+
+  password: {
+    type: String,
+    required: true
+  },
+
   age: {
     type: Number,
     min: 0
@@ -30,14 +35,16 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 userSchema.virtual('courses', {
-  ref: 'Course', 
-  localField: '_id', 
-  foreignField: 'coach', 
+
+  ref: 'Course',
+  localField: '_id',
+  foreignField: 'coach',
+ 
+
 });
 
 userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
-
 
 
 const User = mongoose.model('User', userSchema);
