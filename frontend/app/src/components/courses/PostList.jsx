@@ -1,16 +1,31 @@
-import React from 'react'
-import pdummy from './pdummy.json'
+import React, { useEffect ,useState} from 'react'
 import Course from './Course.jsx'
-
+import axios from "axios"
 
     
 
     function PostList({setselected}) {
+        const [data,setdata]=useState([])
+        const getcourses=async()=>{
+            try {
+                const res= await axios.get("http://127.0.0.1:3000/api/courses/courses")
+          console.log(res);
+          
+         setdata (res.data)
+            } catch (error) {
+              console.log(error);
+                
+            }
+           
+        }
+        useEffect(()=>{
+            getcourses()},[])
+
         return (
             
             <div className='Postlist' >
-            {pdummy.map((element,index)=>{
-        return  <Course element={element}  key={index} setselected={setselected}/>
+            {data.map((element)=>{
+        return  <Course   key={element._id} element={element}  setselected={setselected}/>
         
     })}
             </div>
