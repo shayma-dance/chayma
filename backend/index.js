@@ -1,8 +1,14 @@
+
+
 const express = require("express");
 const cors = require("cors");
+const courseRoutes = require("./Routes/Courses");
+const userRoutes = require("./Routes/Users")
+const enrollmentRoutes = require("./Routes/enrollement")
+
 
 const mongoose = require("mongoose");
-const userRoutes = require("./Routes/Users");
+
 
 const mongoUri = "mongodb://127.0.0.1:27017/dances";
 const app = express();

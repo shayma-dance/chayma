@@ -6,9 +6,9 @@ const Course = ({element,setselected }) => {
     <div onClick={()=>{setselected(element)
      
     }} style={styles.courseCard}>
-      <img src={element.pic} alt={element.title} style={styles.image} />
+      <img src={element.imageUrl} alt={element.title} style={styles.image} />
       <h2>{element.title}</h2>
-      <h4>Coach: {element.coach}</h4>
+      {/* <h4>Coach: {element.coach.name}</h4> */}
 
     </div>
     </NavLink>
