@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Introduction to JavaScript",
+    "pic": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrvMtObu5TTEfjsCRx8lXEb4oxU493Qx3Kug&s",
+    "description": "Learn the basics of JavaScript, including variables, loops, and functions.",
+    "coach": "John Doe"
+  },
+  {
+    "title": "Mastering CSS Flexbox",
+    "pic": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrvMtObu5TTEfjsCRx8lXEb4oxU493Qx3Kug&s",
+    "description": "Dive deep into CSS Flexbox and learn how to create responsive layouts.",
+    "coach": "Jane Smith"
+  },
+  {
+    "title": "React for Beginners",
+    "pic": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrvMtObu5TTEfjsCRx8lXEb4oxU493Qx3Kug&s",
+    "description": "Get started with React, one of the most popular JavaScript libraries for building user interfaces.",
+    "coach": "Emily Johnson"
+  },
+  {
+    "title": "Python Data Analysis",
+    "pic": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrvMtObu5TTEfjsCRx8lXEb4oxU493Qx3Kug&s",
+    "description": "Learn how to analyze data using Python and libraries like Pandas and NumPy.",
+    "coach": "Michael Brown"
+  },
+  {
+    "title": "Advanced Node.js",
+    "pic": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrvMtObu5TTEfjsCRx8lXEb4oxU493Qx3Kug&s",
+    "description": "Master backend development with Node.js by building real-world applications.",
+    "coach": "David Wilson"
+  }
+]
