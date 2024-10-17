@@ -1,84 +1,100 @@
-const User = require('../Models/database/User');
+const User = require("../Models/database/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-User.find()
-  .populate('courses') 
-  .then(user => {
-    console.log(user.courses); 
-  });
+// User registration with password and confirmPassword validation
+exports.createuser = async (req, res) => {
+  try {
+    const { name, email, password, confirmPassword, age, role } = req.body;
 
-  const createuser = async (req, res) => {
-    try {
-      const { name, email, age, imageUrl, role } = req.body;
-  
-      const newUser = new User({
-        name,
-        email,
-        age,
-        imageUrl,
-        role,
-      });
-  
-      const savedUser = await newUser.save();
-      res.status(201).json(savedUser); 
-    } catch (err) {
-      res.status(500).json({ message: "Error creating user", error: err });
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ msg: "Passwords do not match" });
     }
-  }
-  const allusers=async (req, res) => {
-    try {
-      const users = await User.find().populate("courses"); 
-      res.status(200).json(users);
-    } catch (err) {
-      res.status(500).json({ message: "Error fetching users", error: err });
+
+    // Check if the user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ msg: "User already exists" });
     }
+
+    // Validate the role (default to 'user' if none provided)
+    const validRoles = ["user", "coach"];
+    const userRole = validRoles.includes(role) ? role : "user";
+
+    // Hash the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create a new user
+    user = new User({
+      name,
+      email,
+      password: hashedPassword, // Store the hashed password
+      age,
+      role: userRole, // Set the selected role (user or coach)
+    });
+
+    // Save the user to the database
+    await user.save();
+
+    res.status(201).json({ msg: "User registered successfully", user });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
-  const oneuser = async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id).populate("courses"); 
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      res.status(200).json(user);
-    } catch (err) {
-      res.status(500).json({ message: "Error fetching user", error: err });
+};
+
+// User login
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ msg: "Invalid Credentials" });
     }
-  }
-  const updateuser = async (req, res) => {
-    try {
-      const { name, email, age, imageUrl, role } = req.body;
-  
-      const user = await User.findById(req.params.id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-  
-      
-      user.name = name || user.name;
-      user.email = email || user.email;
-      user.age = age || user.age;
-      user.imageUrl = imageUrl || user.imageUrl;
-      user.role = role || user.role;
-  
-      const updatedUser = await user.save();
-      res.status(200).json(updatedUser);
-    } catch (err) {
-      res.status(500).json({ message: "Error updating user", error: err });
+
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: "Invalid Credentials" });
     }
+
+    // Generate JWT token
+    const payload = {
+      user: {
+        id: user.id,
+        role: user.role,
+      },
+    };
+
+    const token = jwt.sign(payload, "mySecretToken", { expiresIn: "1h" });
+
+    res.json({ token, role: user.role, userId: user.id });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
-  const deleteuser = async (req, res) => {
-    try {
-      const user = await User.findById(req.params.id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-  
-      await user.deleteOne();
-  
-      res.status(200).json({ message: "User deleted successfully" });
-    } catch (err) {
-      console.error("Error deleting user:", err);
-      res.status(500).json({ message: "Error deleting user", error: err.message });
-    }
+};
+
+// Get all users
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // Exclude password field for security
+    res.status(200).json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
-  
-  module.exports={createuser,allusers,oneuser,updateuser,deleteuser}
+};
+
+exports.getAllCoaches = async (req, res) => {
+  try {
+    const coaches = await User.find({ role: "coach" }).select("-password"); // Fetch all users with role 'coach' and exclude password field
+    res.status(200).json(coaches); // Return the coaches as JSON
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
