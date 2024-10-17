@@ -1,7 +1,6 @@
-const User = require('../Models/database/User');
-
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const User = require("../Models/database/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 // User registration with password and confirmPassword validation
 exports.createuser = async (req, res) => {
@@ -20,8 +19,8 @@ exports.createuser = async (req, res) => {
     }
 
     // Validate the role (default to 'user' if none provided)
-    const validRoles = ['user', 'coach'];
-    const userRole = validRoles.includes(role) ? role : 'user';
+    const validRoles = ["user", "coach"];
+    const userRole = validRoles.includes(role) ? role : "user";
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
@@ -31,9 +30,9 @@ exports.createuser = async (req, res) => {
     user = new User({
       name,
       email,
-      password: hashedPassword,  // Store the hashed password
+      password: hashedPassword, // Store the hashed password
       age,
-      role: userRole  // Set the selected role (user or coach)
+      role: userRole, // Set the selected role (user or coach)
     });
 
     // Save the user to the database
@@ -66,13 +65,13 @@ exports.login = async (req, res) => {
     const payload = {
       user: {
         id: user.id,
-        role: user.role
-      }
+        role: user.role,
+      },
     };
 
-    const token = jwt.sign(payload, "mySecretToken", { expiresIn: '1h' });
+    const token = jwt.sign(payload, "mySecretToken", { expiresIn: "1h" });
 
-    res.json({ token });
+    res.json({ token, role: user.role, userId: user.id });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -82,7 +81,7 @@ exports.login = async (req, res) => {
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-password'); // Exclude password field for security
+    const users = await User.find().select("-password"); // Exclude password field for security
     res.status(200).json(users);
   } catch (err) {
     console.error(err.message);
@@ -90,7 +89,12 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-
-
-
-
+exports.getAllCoaches = async (req, res) => {
+  try {
+    const coaches = await User.find({ role: "coach" }).select("-password"); // Fetch all users with role 'coach' and exclude password field
+    res.status(200).json(coaches); // Return the coaches as JSON
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
