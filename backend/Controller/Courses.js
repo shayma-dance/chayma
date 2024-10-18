@@ -3,11 +3,13 @@ const Course = require("../Models/database/Courses.js");
 const User = require("../Models/database/User.js");
 
 const addcourse= async (req, res) => {
+  console.log(req.body);
+  
     try {
       const { title, imageUrl, description, coachId } = req.body;
   
       const coach = await User.findById(coachId); 
-      if (!coach || coach.role !== 'coach') {
+      if (!coach ) {
         return res.status(404).json({ message: "Coach not found or invalid role" });
       }
   
@@ -21,6 +23,8 @@ const addcourse= async (req, res) => {
       const savedCourse = await newCourse.save();
       res.status(201).json(savedCourse); 
     } catch (err) {
+      console.log(err);
+      
       res.status(500).json({ message: "Error creating course", error: err });
     }
   }  
