@@ -1,35 +1,88 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+
+
+// App.jsx
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import Navbar from './components/navbar/navbar';
+import SignUpModal from './components/Authentication/SignUp/Modal';
+import LoginModal from './components/Authentication/Login/Modal';
+import Hero from './components/hero-section/Hero';
+import Coaches from './components/Coaches-Section/Coaches';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import CoachDashboard from './components/Coach-Dashboard/Coach';
+import StudentDashboard from './components/Student-Dashboard/Student';
+import Courses from "./components/Courses-section/Courses"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selected, setSelected] = useState(null);
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // Fetch user from localStorage on initial load
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Parse and set the user state from localStorage
+    }
+  }, []);
+
+  const openSignUpModal = () => {
+    setIsSignUpOpen(true);
+    setIsLoginOpen(false);
+  };
+
+  const openLoginModal = () => {
+    setIsLoginOpen(true);
+    setIsSignUpOpen(false);
+  };
+
+  const closeModals = () => {
+    setIsSignUpOpen(false);
+    setIsLoginOpen(false);
+  };
+
+  const LayoutWithNavbarAndHero = ({ children }) => {
+    return (
+      <>
+        <Navbar 
+          user={user} 
+          setUser={setUser} 
+          openLoginModal={openLoginModal} 
+          openSignUpModal={openSignUpModal} 
+        />
+        <Hero />
+        {children}
+       
+      </>
+    );
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="w-full h-full flex flex-col items-center justify-center">
+        <Routes>
+          <Route path="/" element={<LayoutWithNavbarAndHero></LayoutWithNavbarAndHero>} />
+          <Route path="/register" element={<LayoutWithNavbarAndHero><SignUpModal closeModal={closeModals} /></LayoutWithNavbarAndHero>} />
+          <Route path="/coach-dashboard" element={<CoachDashboard />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
+        </Routes>
+        <Coaches />
+        <Courses />
+        
+
+        {isSignUpOpen && (
+          <SignUpModal closeModal={closeModals} />
+        )}
+
+        {isLoginOpen && (
+          <LoginModal closeModal={closeModals} />
+        )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </Router>
+  );
 }
 
-export default App
+export default App;
+
