@@ -2,11 +2,11 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 const Course = ({element,setselected }) => {
   return (
-    <NavLink to = "/onePost" >
-    <div onClick={()=>{setselected(element)
+    <NavLink to = "/onePost"  >
+    <div className='w-250 h-250 bg-blue-500 m-2' onClick={()=>{setselected(element)
      
     }} style={styles.courseCard}>
-      <img src={element.imageUrl} alt={element.title} style={styles.image} />
+      <img className="h-[200px] w-[200px]" src={element.imageUrl} alt={element.title} />
       <h2>{element.title}</h2>
       {/* <h4>Coach: {element.coach.name}</h4> */}
 
@@ -27,7 +27,7 @@ const styles = {
   },
   image: {
     width: '100%',
-    height: 'auto',
+    height: '100%',
     borderRadius: '8px 8px 0 0'
   }
 };

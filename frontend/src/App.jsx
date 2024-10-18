@@ -14,11 +14,25 @@ import AddCourse from "./components/Coach-Dashboard/AddCourse";
 import UpdateProfile from './components/Coach-Dashboard/UpdateProfileSection';
 import MyStudents from "./components/Coach-Dashboard/MyStudents"
 
+<<<<<<< HEAD
+=======
+import React,{useState} from 'react'
+import './App.css'
+import Sign from './components/features/SignUp'
+import Navbar from './components/navbar/navbar'
+import Courses from './components/courses/PostList'
+// import Login from './components/features/login'
+import SelectItem from './components/courses/SelectItem'
+import CoachDasboard from './components/coach/CoachDashboard'
+import StudentDashboard from './components/UserDash'
+import { BrowserRouter as Router,  Route, Routes } from "react-router-dom"
+>>>>>>> 5b0ad82d13b1814ede0134ce4d3004d58e03973d
 function App() {
   const [isSignUpOpen, setIsSignUpOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [user, setUser] = useState(null);
 
+<<<<<<< HEAD
   const coachesRef = useRef(null);
   const coursesRef = useRef(null);
 
@@ -100,6 +114,17 @@ function App() {
         {isLoginOpen && (
           <LoginModal closeModal={closeModals} />
         )}
+=======
+     <Routes>
+      <Route  path= "/" element={<Courses setselected={setselected}/>}/>
+      <Route  path= "/register" element={<Sign/>}/>
+      <Route  path= "/onePost" element={<SelectItem element={selected}/>}/>
+      <Route  path= "/coach" element={<CoachDasboard/>}/>
+      <Route path="/student-dashboard" element={<StudentDashboard />} />
+     </Routes>
+     </Router>
+    
+>>>>>>> 5b0ad82d13b1814ede0134ce4d3004d58e03973d
       </div>
     </Router>
   );

@@ -23,7 +23,7 @@ import axios from "axios"
 
         return (
             
-            <div className='Postlist' >
+            <div className='flex justify-center items-center flex-wrap' >
             {data.map((element)=>{
         return  <Course   key={element._id} element={element}  setselected={setselected}/>
         
