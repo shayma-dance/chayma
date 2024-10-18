@@ -5,7 +5,7 @@ const express = require("express");
 const router = express.Router();
 const{addcourse,allcourses,onecourse,updatecourse,deletecourse}=require('../Controller/Courses.js')
 
-router.post("/courses",addcourse)
+router.post("/addcourse",addcourse)
 
 router.get("/courses", allcourses);
 

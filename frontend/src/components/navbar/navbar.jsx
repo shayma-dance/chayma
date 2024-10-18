@@ -13,7 +13,7 @@ function navbar() {
         <div className="flex items-center space-x-4">
             <button className='p-2 text-[#F9627D] bg-white  font-bold rounded text-sm ' >Login</button>
           <NavLink to = "/register" >
-          <spam >signUp</spam>
+          <span >signUp</span>
           </NavLink>
 
         </div>

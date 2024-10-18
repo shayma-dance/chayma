@@ -1,5 +1,4 @@
 const User = require('../Models/database/User');
-
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
@@ -72,7 +71,7 @@ exports.login = async (req, res) => {
 
     const token = jwt.sign(payload, "mySecretToken", { expiresIn: '1h' });
 
-    res.json({ token });
+    res.json({ token, role: user.role });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");
@@ -90,7 +89,49 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.getAllCoaches = async (req, res) => {
+  try {
+    const coaches = await User.find({ role: 'coach' }).select('-password'); // Fetch all users with role 'coach' and exclude password field
+    res.status(200).json(coaches); // Return the coaches as JSON
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+};
 
+exports.updateProfile = async (req,res) =>{
+  try {
+    const {userId} = req.params;
+    const { name, email, age, role } = req.body;
+    if (!name && !email  && !age && !role) {
+      return res.status(400).json({ msg: "No fields to update" });
+    }
+    const  user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    if (name) user.name = name;
+    if (email) user.email = email; 
+    if (age) user.age = age;
+    if (role) {
+      const validRoles = ['user', 'coach'];
+      user.role = validRoles.includes(role) ? role : user.role; 
+    }
+    await user.save();
+    res.status(200).json({
+      msg: "User updated successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        age: user.age,
+        role: user.role
+      }
+    });
 
-
+  } catch (error) {
+    console.error("Error updating user:", err.message);
+    res.status(500).json({ msg: "Server error" });
+  }
+}
 

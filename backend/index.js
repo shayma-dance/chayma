@@ -20,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
+app.use("/api/courses", courseRoutes);
 app.use("/api/users", userRoutes);
 
 // Connect to the database using async/await
