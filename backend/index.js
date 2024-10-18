@@ -21,6 +21,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/users", userRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/enrollement", enrollmentRoutes);
 
 // Connect to the database using async/await
 const connectDB = async () => {
